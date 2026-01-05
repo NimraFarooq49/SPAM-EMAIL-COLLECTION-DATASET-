@@ -67,8 +67,14 @@ st.markdown('<p class="section-header">📁 Step 1: Upload Dataset</p>', unsafe_
 uploaded_file = st.file_uploader("Choose a CSV file", type=['csv'])
 
 if uploaded_file is not None:
-    # Load dataset
-    df = pd.read_csv(uploaded_file)
+    # Load dataset with error handling for encoding
+    try:
+        df = pd.read_csv(uploaded_file, encoding='utf-8')
+    except UnicodeDecodeError:
+        try:
+            df = pd.read_csv(uploaded_file, encoding='latin-1')
+        except:
+            df = pd.read_csv(uploaded_file, encoding='iso-8859-1')
     
     st.success("✅ Dataset loaded successfully!")
     
